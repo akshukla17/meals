@@ -17,43 +17,60 @@ class MealDetailsScreen extends ConsumerWidget {
     final favoriteMeals = ref.watch(favoriteMealsProvider);
     final isFavorite = favoriteMeals.contains(meal);
     return Scaffold(
-        appBar: AppBar(
-          title: Text(meal.title),
-          actions: [
-            IconButton(
-              onPressed: () {
-                var wasAdded = ref
-                    .read(favoriteMealsProvider.notifier)
-                    .toggleMealFavoriteStatus(meal);
-                ScaffoldMessenger.of(context).clearSnackBars();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    duration: const Duration(seconds: 3), //default is 4 seconds
-                    content: Text(wasAdded
-                        ? "Meal is added in Fav list."
-                        : "Meal is  removed from Fav list now!"),
-                  ),
+        appBar: AppBar(title: Text(meal.title), actions: [
+          IconButton(
+            onPressed: () {
+              var wasAdded = ref
+                  .read(favoriteMealsProvider.notifier)
+                  .toggleMealFavoriteStatus(meal);
+              ScaffoldMessenger.of(context).clearSnackBars();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  duration: const Duration(seconds: 3), //default is 4 seconds
+                  content: Text(wasAdded
+                      ? "Meal is added in Fav list."
+                      : "Meal is  removed from Fav list now!"),
+                ),
+              );
+            },
+            // icon: Icon(isFavorite ? Icon(Icons.star, color: Colors.red,) : Icons.star_border_outlined),
+            //added color in favorite icon
+            //   icon: isFavorite
+            //       ? const Icon(
+            //           Icons.star,
+            //           color: Colors.red,
+            //         )
+            //       : const Icon(Icons.star_border_outlined),
+            //add implicit animation
+            icon: AnimatedSwitcher(
+              duration: const Duration(microseconds: 300),
+              transitionBuilder: (child, animation) {
+                return RotationTransition(
+                  turns: Tween(begin: 0.8, end: 1.0).animate(animation),
+                  child: child,
                 );
               },
-              // icon: Icon(isFavorite ? Icon(Icons.star, color: Colors.red,) : Icons.star_border_outlined),
-              //added color in favorite icon
-              icon: isFavorite
+              key: ValueKey(isFavorite),
+              child: isFavorite
                   ? const Icon(
                       Icons.star,
                       color: Colors.red,
                     )
-                  : const Icon(Icons.star_border_outlined),
-            )
-          ],
-        ),
+                  : const Icon(Icons.star_border),
+            ),
+          )
+        ]),
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Image.network(
-                meal.imageUrl,
-                height: 300,
-                width: double.infinity,
-                fit: BoxFit.cover,
+              Hero(
+                tag: meal.id,
+                child: Image.network(
+                  meal.imageUrl,
+                  height: 300,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
               ),
               const SizedBox(
                 height: 14,
