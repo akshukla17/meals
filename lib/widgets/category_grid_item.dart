@@ -9,7 +9,7 @@ class CategoryGridItem extends StatelessWidget {
   });
 
   final Category category;
-  void Function() onCategoryTap;
+  final void Function() onCategoryTap;
 
   @override
   Widget build(BuildContext context) {

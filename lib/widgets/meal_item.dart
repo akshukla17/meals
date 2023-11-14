@@ -9,7 +9,7 @@ class MealItem extends StatelessWidget {
   MealItem({super.key, required this.meal, required this.onMealTap});
 
   final Meal meal;
-  void Function() onMealTap;
+  final void Function() onMealTap;
 
   String get complexityText {
     return meal.complexity.name[0].toUpperCase() +
